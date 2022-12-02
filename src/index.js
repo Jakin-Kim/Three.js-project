@@ -56,19 +56,20 @@ const controls = new OrbitControls(camera, canvas);
 const renderer = new THREE.WebGLRenderer({canvas});
 renderer.setSize( window.innerWidth, window.innerHeight );
 
-
 addLighting(scene); // scene에 조명 추가
 addFloor(scene);    // scene에 바닥 추가
 addSphere(scene);   // scene에 공 추가
 
-// setting initial values for required parameters 
-let acceleration = 9.8;
-let bounce_distance = 18;
-let bottom_position_y = -4;
-let time_step = 0.02;
-// time_counter is calculated to be the time the ball just reached the top position
-// this is simply calculated with the s = (1/2)gt*t formula, which is the case when ball is dropped from the top position
-let time_counter = Math.sqrt(bounce_distance * 2 / acceleration);
+// 공의 movement 추가 
+let acceleration = 9;       // 가속도(저항이 없다면, 중력과 같다)
+let bounce_distance = 18;   // 물체가 떨어져있는 거리
+let bottom_position_y = -4; // 
+let time_step = 0.02;       // 
+
+// 낙하운동의 공식을 사용하기(s = (1/2)gt*t)
+// s = 이동거리, g = 중력(공기저항이 무시된다면 '중력 = 가속도'), t = 이동시간
+// 시간으로 공식을 바꿔보면, t = root(2S / g)가 된다.
+let time_counter = Math.sqrt(bounce_distance * 2 / acceleration); // 공이 가장 위쪽에 위치하는 시간을 계산한다.
 let initial_speed = acceleration * time_counter;
 let sphere = scene.getObjectByName("my-sphere");
 
@@ -76,16 +77,14 @@ let sphere = scene.getObjectByName("my-sphere");
 const animate = () => {
   requestAnimationFrame( animate );
 
-  // reset time_counter back to the start of the bouncing sequence when sphere hits through the bottom position
-  if (sphere.position.y < bottom_position_y) {
-    time_counter = 0;
-  }
-  // calculate sphere position with the s2 = s1 + ut + (1/2)gt*t formula
-  // this formula assumes the ball to be bouncing off from the bottom position when time_counter is zero
+  // 바닥에 공이 닿으면 이동시간을 리셋한다.
+  if (sphere.position.y < bottom_position_y) time_counter = 0;
+  // 시간이 0으로 돌아가면 바닥에서 튀어올라간다. 바닥의 위치 공식 : s2 = s1 + ut + (1/2)gt*t
   sphere.position.y = bottom_position_y + initial_speed * time_counter - 0.5 * acceleration * time_counter * time_counter;
     
-  // advance time
+  // 이동시간의 흐름
   time_counter += time_step;
+
   window.addEventListener('resize', windowResize);
   renderer.render( scene, camera );
 };
