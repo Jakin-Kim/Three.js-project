@@ -11,4 +11,4 @@
 - [ ] 여러 상황에 대응하는 설계
 - [ ] 그 외 본인의 기발한 아이디어
 
-## 💯 Three.js 학습내용 blogging 💯
+## 💯 [Three.js 학습내용 blogging](https://broccoli-lover.notion.site/Three-js-WIL-What-I-Learned-fa826336b7c643438811f2d6d3d698bd) 💯
